@@ -21,4 +21,10 @@ public:
         const Grafo& grafo,
         const vector<int>& nodosComponenteGigante
     );
+
+    ResultadoDiametro calcularDiametroSampling(
+        const Grafo& grafo,
+        const vector<int>& nodosComponenteGigante,
+        int cantidadMuestras
+    );
 };

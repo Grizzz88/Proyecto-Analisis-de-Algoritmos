@@ -16,7 +16,7 @@ int main()
     Grafo grafo;
     CSVLoader loader;
 
-    if (!loader.cargarEdges("edges_limpio.csv", grafo))
+    if (!loader.cargarEdges("edges.csv", grafo))
     {
         cout << "Error cargando archivo CSV." << endl;
         return 1;
@@ -100,51 +100,67 @@ int main()
     }
 
     // =====================================================
-    // OBJETIVO 3
-    // =====================================================
-    cout << "\n===== OBJETIVO 3: DIAMETRO VIAL =====" << endl;
+ // OBJETIVO 3
+ // =====================================================
+
+    cout << "\n===== OBJETIVO 3: DIAMETRO VIAL ====="
+        << endl;
 
     int tamanioGigante =
         resultadoIslas.tamanioComponenteGigante;
 
+    DiametroVial diametro;
+
+    ResultadoDiametro resultadoDiametro;
+
     if (tamanioGigante <= 1000)
     {
-        cout << "Modo exacto." << endl;
+        cout << "Modo exacto."
+            << endl;
 
-        DiametroVial diametro;
-
-        ResultadoDiametro resultadoDiametro =
+        resultadoDiametro =
             diametro.calcularDiametro(
                 grafo,
                 resultadoIslas.nodosComponenteGigante
             );
-
-        cout << "Nodo origen: "
-            << resultadoDiametro.nodoOrigenReal
-            << endl;
-
-        cout << "Nodo destino: "
-            << resultadoDiametro.nodoDestinoReal
-            << endl;
-
-        cout << "Distancia minima mas larga: "
-            << resultadoDiametro.distanciaMaxima
-            << " metros"
-            << endl;
     }
     else
     {
-        cout << "Componente gigante demasiado grande ("
-            << tamanioGigante
-            << " nodos)." << endl;
-
-        cout << "Se omite el calculo exacto del diametro."
+        cout << "Modo aproximado (Sampling)."
             << endl;
 
-        cout << "Para datasets grandes se recomienda "
-            << "usar una aproximacion."
+        cout << "Tamano componente gigante: "
+            << tamanioGigante
+            << " nodos"
+            << endl;
+
+        int muestras = 100;
+
+        resultadoDiametro =
+            diametro.calcularDiametroSampling(
+                grafo,
+                resultadoIslas.nodosComponenteGigante,
+                muestras
+            );
+
+        cout << "Muestras utilizadas: "
+            << muestras
             << endl;
     }
+
+    cout << "Nodo origen: "
+        << resultadoDiametro.nodoOrigenReal
+        << endl;
+
+    cout << "Nodo destino: "
+        << resultadoDiametro.nodoDestinoReal
+        << endl;
+
+    cout << "Distancia minima mas larga: "
+        << resultadoDiametro.distanciaMaxima
+        << " metros"
+        << endl;
+
     // =====================================================
     // OBJETIVO 4
     // =====================================================
