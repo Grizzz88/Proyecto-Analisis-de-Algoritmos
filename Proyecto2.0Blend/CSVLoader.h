@@ -26,25 +26,12 @@ struct EdgeCSV
 class CSVLoader
 {
 private:
-
     vector<EdgeCSV> edges;
-
-    unordered_map<string, vector<int>>
-        velocidadesPorClase;
-
-    unordered_map<string, int>
-        medianaPorClase;
-
+    unordered_map<string, vector<int>> velocidadesPorClase;
+    unordered_map<string, int> medianaPorClase;
 public:
-
-    bool cargarEdges(
-        const string& archivo,
-        Grafo& grafo
-    );
-
+    bool cargarEdges(const string& archivo,Grafo& grafo);
 private:
-
     void calcularMedianas();
-
     void corregirVelocidades();
 };

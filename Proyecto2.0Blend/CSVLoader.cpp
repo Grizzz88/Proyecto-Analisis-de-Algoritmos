@@ -5,13 +5,9 @@
 #include <iostream>
 #include <algorithm>
 
-bool CSVLoader::cargarEdges(
-    const string& archivo,
-    Grafo& grafo
-)
+bool CSVLoader::cargarEdges(const string& archivo,Grafo& grafo)
 {
     ifstream file(archivo);
-
     if (!file.is_open())
     {
         cout << "Error al abrir: "
@@ -20,12 +16,8 @@ bool CSVLoader::cargarEdges(
 
         return false;
     }
-
     string linea;
-
-    // Saltar cabecera
     getline(file, linea);
-
     while (getline(file, linea))
     {
         if (linea.empty())
@@ -34,7 +26,6 @@ bool CSVLoader::cargarEdges(
         }
 
         stringstream ss(linea);
-
         string osm_id_str;
         string from_str;
         string to_str;
@@ -74,8 +65,7 @@ bool CSVLoader::cargarEdges(
 
         if (e.maxspeed > 0)
         {
-            velocidadesPorClase[e.fclass]
-                .push_back(e.maxspeed);
+            velocidadesPorClase[e.fclass].push_back(e.maxspeed);
         }
 
         edges.push_back(e);
@@ -89,19 +79,8 @@ bool CSVLoader::cargarEdges(
 
     for (const auto& e : edges)
     {
-        grafo.agregarArista(
-            e.from,
-            e.to,
-            e.distancia,
-            e.maxspeed,
-            e.oneway,
-            e.fclass
-        );
+        grafo.agregarArista(e.from,e.to,e.distancia,e.maxspeed,e.oneway,e.fclass);
     }
-
-    cout << "Aristas cargadas: "
-        << edges.size()
-        << endl;
 
     return true;
 }
@@ -111,46 +90,23 @@ void CSVLoader::calcularMedianas()
     for (auto& par : velocidadesPorClase)
     {
         string clase = par.first;
-
         vector<int>& velocidades = par.second;
 
-        sort(
-            velocidades.begin(),
-            velocidades.end()
-        );
+        sort(velocidades.begin(), velocidades.end());
 
-        int n =
-            static_cast<int>(
-                velocidades.size()
-                );
-
+        int n = static_cast<int>(velocidades.size());
         int mediana;
 
         if (n % 2 == 0)
         {
-            mediana =
-                (
-                    velocidades[n / 2 - 1]
-                    +
-                    velocidades[n / 2]
-                    )
-                /
-                2;
+            mediana = (velocidades[n / 2 - 1] + velocidades[n / 2]) / 2;
         }
         else
         {
-            mediana =
-                velocidades[n / 2];
+            mediana = velocidades[n / 2];
         }
 
-        medianaPorClase[clase] =
-            mediana;
-
-        cout
-            << clase
-            << " -> mediana "
-            << mediana
-            << endl;
+        medianaPorClase[clase] = mediana;
     }
 }
 

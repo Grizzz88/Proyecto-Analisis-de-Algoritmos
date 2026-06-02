@@ -3,48 +3,25 @@
 int Grafo::obtenerIndice(int idReal)
 {
     auto it = idAIndice.find(idReal);
-
     if (it != idAIndice.end())
     {
         return it->second;
     }
-
-    int nuevoIndice =
-        static_cast<int>(indiceAId.size());
-
+    int nuevoIndice = static_cast<int>(indiceAId.size());
     idAIndice[idReal] = nuevoIndice;
-
     indiceAId.push_back(idReal);
-
     dirigido.push_back(vector<Arista>());
-
     noDirigido.push_back(vector<Arista>());
-
     return nuevoIndice;
 }
 
-void Grafo::agregarArista(
-    int origenReal,
-    int destinoReal,
-    double distancia,
-    int velocidad,
-    bool oneway,
-    const string& tipoVia
-)
+void Grafo::agregarArista(int origenReal,int destinoReal,double distancia,int velocidad,bool oneway,const string& tipoVia)
 {
-    int origen =
-        obtenerIndice(origenReal);
+    int origen = obtenerIndice(origenReal);
 
-    int destino =
-        obtenerIndice(destinoReal);
+    int destino = obtenerIndice(destinoReal);
 
-    double tiempo =
-        (distancia / 1000.0)
-        /
-        velocidad
-        *
-        60.0;
-
+    double tiempo = (distancia / 1000.0)/velocidad*60.0;
     Arista a;
 
     a.destino = destino;
@@ -106,4 +83,35 @@ int Grafo::cantidadAristasNoDirigidas() const
     }
 
     return total;
+}
+bool Grafo::existeNodo(int idReal) const
+{
+    return idAIndice.find(idReal) != idAIndice.end();
+}
+
+int Grafo::buscarIndice(int idReal) const
+{
+    auto it = idAIndice.find(idReal);
+
+    if (it == idAIndice.end())
+    {
+        return -1;
+    }
+
+    return it->second;
+}
+
+int Grafo::obtenerIdReal(int indice) const
+{
+    return indiceAId[indice];
+}
+
+const vector<vector<Arista>>& Grafo::obtenerDirigido() const
+{
+    return dirigido;
+}
+
+const vector<vector<Arista>>& Grafo::obtenerNoDirigido() const
+{
+    return noDirigido;
 }
