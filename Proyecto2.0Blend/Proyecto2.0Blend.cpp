@@ -17,8 +17,7 @@ int main()
 
     CSVLoader loader;
 
-    // Cargar edges limpios
-    if (!loader.cargarEdges("edges_limpio.csv", grafo))
+    if (!loader.cargarEdges("edges_prueba.csv", grafo))
     {
         return 1;
     }
@@ -57,6 +56,31 @@ int main()
 
     for (int i = 0; i < limite; i++)
         cout << resultadoIslas.nodosComponenteGigante[i] << endl;
+
+
+
+    cout << "\n===== OBJETIVO 3: DIAMETRO VIAL =====" << endl;
+
+    DiametroVial diametro;
+
+    ResultadoDiametro resultadoDiametro =
+        diametro.calcularDiametro(
+            grafo,
+            resultadoIslas.nodosComponenteGigante
+        );
+
+    cout << "Nodo origen: "
+        << resultadoDiametro.nodoOrigenReal
+        << endl;
+
+    cout << "Nodo destino: "
+        << resultadoDiametro.nodoDestinoReal
+        << endl;
+
+    cout << "Distancia minima mas larga: "
+        << resultadoDiametro.distanciaMaxima
+        << " metros"
+        << endl;
 
     
     cout << "\n===== OBJETIVO 4: RED DE EMERGENCIA MINIMA =====" << endl;
