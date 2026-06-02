@@ -131,19 +131,23 @@
     <ClCompile Include="Arista.cpp" />
     <ClCompile Include="CSVLoader.cpp" />
     <ClCompile Include="DiametroVial.cpp" />
+    <ClCompile Include="Dijkstra.cpp" />
     <ClCompile Include="Grafo.cpp" />
     <ClCompile Include="IslasViales.cpp" />
     <ClCompile Include="Proyecto2.0Blend.cpp" />
     <ClCompile Include="RedEmergenciaMinima.cpp" />
+    <ClCompile Include="RutaOptima.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AlcanceVehicular.h" />
     <ClInclude Include="Arista.h" />
     <ClInclude Include="CSVLoader.h" />
     <ClInclude Include="DiametroVial.h" />
+    <ClInclude Include="Dijkstra.h" />
     <ClInclude Include="Grafo.h" />
     <ClInclude Include="IslasViales.h" />
     <ClInclude Include="RedEmergenciaMinima.h" />
+    <ClInclude Include="RutaOptima.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

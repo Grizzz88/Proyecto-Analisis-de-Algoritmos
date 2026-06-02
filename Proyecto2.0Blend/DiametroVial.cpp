@@ -1,21 +1,9 @@
 #include "DiametroVial.h"
-#include <queue>
+#include "Dijkstra.h"
+
 #include <limits>
-#include <iostream>
 
-struct Estado
-{
-    int nodo;
-    double distancia;
-};
-
-struct CompararEstado
-{
-    bool operator()(const Estado& a, const Estado& b)
-    {
-        return a.distancia > b.distancia;
-    }
-};
+using namespace std;
 
 ResultadoDiametro DiametroVial::calcularDiametro(
     const Grafo& grafo,
@@ -23,54 +11,41 @@ ResultadoDiametro DiametroVial::calcularDiametro(
 )
 {
     ResultadoDiametro resultado;
+
     resultado.distanciaMaxima = 0.0;
 
-    const vector<vector<Arista>>& dirigido = grafo.obtenerDirigido();
-
-    // Convertir IDs reales a índices internos
-    vector<int> indices;
-    for (int idReal : nodosComponenteGigante)
-        indices.push_back(grafo.buscarIndice(idReal));
-
-    // Para cada nodo de la componente gigante
-    for (int origenIndice : indices)
+    for (int origenReal : nodosComponenteGigante)
     {
-        vector<double> distancia(grafo.cantidadNodos(),
-            numeric_limits<double>::max());
+        Dijkstra dijkstra;
 
-        priority_queue<Estado, vector<Estado>, CompararEstado> cola;
+        ResultadoDijkstra resultadoDijkstra =
+            dijkstra.calcular(
+                grafo,
+                origenReal,
+                DISTANCIA
+            );
 
-        distancia[origenIndice] = 0.0;
-        cola.push({ origenIndice, 0.0 });
+        const vector<double>& distancia =
+            resultadoDijkstra.costo;
 
-        while (!cola.empty())
-        {
-            Estado actual = cola.top();
-            cola.pop();
-
-            if (actual.distancia > distancia[actual.nodo])
-                continue;
-
-            for (const Arista& arista : dirigido[actual.nodo])
-            {
-                double nuevaDist = actual.distancia + arista.distancia;
-                if (nuevaDist < distancia[arista.destino])
-                {
-                    distancia[arista.destino] = nuevaDist;
-                    cola.push({ arista.destino, nuevaDist });
-                }
-            }
-        }
-
-        // Buscar distancia máxima desde este nodo
         for (int i = 0; i < grafo.cantidadNodos(); i++)
         {
-            if (distancia[i] < numeric_limits<double>::max() &&
-                distancia[i] > resultado.distanciaMaxima)
+            if (
+                distancia[i] <
+                numeric_limits<double>::max()
+                &&
+                distancia[i] >
+                resultado.distanciaMaxima
+                )
             {
-                resultado.distanciaMaxima = distancia[i];
-                resultado.nodoOrigenReal = grafo.obtenerIdReal(origenIndice);
-                resultado.nodoDestinoReal = grafo.obtenerIdReal(i);
+                resultado.distanciaMaxima =
+                    distancia[i];
+
+                resultado.nodoOrigenReal =
+                    origenReal;
+
+                resultado.nodoDestinoReal =
+                    grafo.obtenerIdReal(i);
             }
         }
     }

@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Dijkstra.h"
 #include <vector>
 
 #include "Grafo.h"

@@ -1,24 +1,9 @@
 #include "AlcanceVehicular.h"
+#include "Dijkstra.h"
 
-#include <queue>
-#include <limits>
 #include <iostream>
 
 using namespace std;
-
-struct EstadoAlcance
-{
-    int nodo;
-    double distancia;
-};
-
-struct CompararEstadoAlcance
-{
-    bool operator()(const EstadoAlcance& a, const EstadoAlcance& b)
-    {
-        return a.distancia > b.distancia;
-    }
-};
 
 vector<int> AlcanceVehicular::calcularAlcance(
     const Grafo& grafo,
@@ -34,61 +19,19 @@ vector<int> AlcanceVehicular::calcularAlcance(
         return alcanzables;
     }
 
-    int cantidadNodos = grafo.cantidadNodos();
+    Dijkstra dijkstra;
 
-    vector<double> distancia(
-        cantidadNodos,
-        numeric_limits<double>::max()
-    );
+    ResultadoDijkstra resultado =
+        dijkstra.calcular(
+            grafo,
+            nodoOrigenReal,
+            DISTANCIA
+        );
 
-    priority_queue<
-        EstadoAlcance,
-        vector<EstadoAlcance>,
-        CompararEstadoAlcance
-    > cola;
+    const vector<double>& distancia =
+        resultado.costo;
 
-    int origen = grafo.buscarIndice(nodoOrigenReal);
-
-    distancia[origen] = 0.0;
-
-    cola.push({ origen, 0.0 });
-
-    const vector<vector<Arista>>& dirigido = grafo.obtenerDirigido();
-
-    while (!cola.empty())
-    {
-        EstadoAlcance actual = cola.top();
-        cola.pop();
-
-        if (actual.distancia > distancia[actual.nodo])
-        {
-            continue;
-        }
-
-        if (actual.distancia > distanciaMaxima)
-        {
-            continue;
-        }
-
-        for (const Arista& arista : dirigido[actual.nodo])
-        {
-            double nuevaDistancia =
-                actual.distancia + arista.distancia;
-
-            if (nuevaDistancia <= distanciaMaxima &&
-                nuevaDistancia < distancia[arista.destino])
-            {
-                distancia[arista.destino] = nuevaDistancia;
-
-                cola.push({
-                    arista.destino,
-                    nuevaDistancia
-                    });
-            }
-        }
-    }
-
-    for (int i = 0; i < cantidadNodos; i++)
+    for (int i = 0; i < grafo.cantidadNodos(); i++)
     {
         if (distancia[i] <= distanciaMaxima)
         {
